@@ -15,7 +15,9 @@ public class Receiver extends CyclicBehaviour
         ACLMessage msg = this.agent.receive();
         if (msg!=null)
             replyToMessage(msg);
-        block();
+        else {
+            block();
+        }
     }
 
     // Replying to all messages.

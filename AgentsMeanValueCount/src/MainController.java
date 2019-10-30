@@ -6,7 +6,11 @@ import jade.wrapper.ContainerController;
 
 public class MainController {
 
-    private static final int numberOfAgents = 5;
+    private static int numberOfAgents;
+
+    public MainController(int numberOfAgents) {
+        this.numberOfAgents = numberOfAgents;
+    }
 
     void initAgents() {
 
@@ -21,12 +25,13 @@ public class MainController {
         ContainerController cc = rt.createMainContainer(p);
 
         try {
-            for (int i = 1; i<= MainController.numberOfAgents; i++) {
+            for (int i = 1; i <= MainController.numberOfAgents; i++) {
                 AgentController agent = cc.createNewAgent(Integer.toString(i), "DefaultAgent", null);
                 agent.start();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 }
