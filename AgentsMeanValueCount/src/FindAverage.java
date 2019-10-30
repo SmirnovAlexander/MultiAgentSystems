@@ -1,9 +1,6 @@
 import jade.core.AID;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
-
-import java.util.ArrayList;
 
 public class FindAverage extends TickerBehaviour {
 
@@ -33,6 +30,7 @@ public class FindAverage extends TickerBehaviour {
             this.send_msg(receiver_id, content);
 
             System.out.println("------------------------------------------------------------------------------------------------");
+
             this.currentStep++;
         } else {
             this.stop();
