@@ -12,6 +12,10 @@ Below are listed all tasks with links and descriptions.
 
 [JADE installation](https://github.com/SmirnovAlexander/MultiAgentSystems/blob/master/materials/Установка%20и%20работа%20с%20JADE.pdf)
 
+[JADE Programming Tutorial](https://jade.tilab.com/doc/tutorials/JADEProgramming-Tutorial-for-beginners.pdf)
+
+[JADE Tutorials & Guides](https://jade.tilab.com/documentation/tutorials-guides/)
+
 - [1.1]()
 
    You're given 10 agents. Each agent randomly connected to other agents. Each agent proposes a number. Agents are able to communicate only with neighbours. Program should count a mean value. For example: 
