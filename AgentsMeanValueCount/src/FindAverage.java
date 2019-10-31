@@ -2,7 +2,6 @@ import jade.core.AID;
 import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public class FindAverage extends TickerBehaviour {
@@ -20,27 +19,28 @@ public class FindAverage extends TickerBehaviour {
     @Override
     protected void onTick() {
 
-
         if (currentStep < App.MAX_STEPS) {
 
-            if (this.agent.getMainFull() && !this.agent.getLinkedAgentsState().containsValue(false)) {
-                System.out.println(ANSI_GREEN + getMeanValue() + ANSI_RESET);
+            // Printing agent info.
+            System.out.println(String.format("Tick = %d, agent %d: ", getTickCount(), this.agent.getId()));
+
+            // Terminating agent if he had collected info about other agents and all it's neighbours also collected all information.
+            if (this.agent.getIsHaveInfoAboutAllAgents() && !this.agent.getLinkedAgentsState().containsValue(false)) {
+
+                // Sending answer to server only from main agent.
+                if (this.agent.getIsMain()) {
+                    System.out.println(String.format("The mean value of agents is: %f", getMeanValue()));
+                    System.out.println("----------------------------------------------------------------");
+                }
+
                 this.stop();
             }
 
-            // Printing agent info.
-            System.out.println(String.format("Agent %d: tick = %d", this.agent.getId(), getTickCount()));
-
-
-            // Sending messages to agents.
+            // Sending request messages to linked agents.
             if (!this.agent.getLinkedAgents().isEmpty()) {
                 for (int receiver_id: this.agent.getLinkedAgents()) {
-
-
                     String content = String.format("Agent %d requesting isMapFull and HashMap from agent %d.", this.agent.getId(), receiver_id);
                     this.send_msg(receiver_id, content);
-
-
                 }
             }
 
@@ -50,7 +50,7 @@ public class FindAverage extends TickerBehaviour {
         }
     }
 
-    // Sending message to an agent by id.
+    // Sending request message to an agent by id.
     private void send_msg(int id, String content) {
         if (this.agent.getId() != id) {
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -61,19 +61,15 @@ public class FindAverage extends TickerBehaviour {
         }
     }
 
+    // Counting mean value of values from agentsInfo dictionary.
     public float getMeanValue() {
-
-        Collection<Integer> values = this.agent.getDictionary().values();
-
+        Collection<Integer> values = this.agent.getAgentsInfo().values();
         int sum = 0;
         for (int value: values) {
             sum += value;
         }
-
         return ((float) sum / values.size());
     }
-
-
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_GREEN = "\u001B[32m";

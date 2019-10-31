@@ -6,9 +6,10 @@ public class App {
     public static ArrayList<ArrayList<Integer>> ADJ_MATRIX;
     public static int NUMBER_OF_AGENTS = 5;
     public static int MAX_STEPS = 100;
-    public static  int  MAIN_AGENT_ID = 1;
 
     public static void main(String[] args) {
+
+        // ToDo: remove if on main (remove main agent)
 
         // Initializing connection matrix
         ADJ_MATRIX = new ArrayList<>();

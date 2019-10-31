@@ -30,83 +30,79 @@ public class Receiver extends CyclicBehaviour
         String sender_name = msg.getSender().getName();
         int sender_id = Integer.parseInt(sender_name.substring(0, sender_name.indexOf("@")));
 
-        // Replying to message.
-
+        // Replying to request message with IsHaveInfoAboutAllAgents and agentsInfo.
         if (msg.getPerformative() == ACLMessage.REQUEST) {
-            System.out.println(String.format("Agent with ID %d received REQUEST message from Agent with ID %d", this.agent.getId(), sender_id));
 
             ACLMessage reply = msg.createReply();
             reply.setPerformative(ACLMessage.INFORM);
-            reply.setContent(String.format("%b@%s", this.agent.getMainFull(), this.agent.getDictionary().toString()));
-            System.out.println(String.format("%b@%s", this.agent.getMainFull(), this.agent.getDictionary().toString()));
-            this.agent.send(reply);
+            reply.setContent(String.format("%b@%s", this.agent.getIsHaveInfoAboutAllAgents(), this.agent.getAgentsInfo().toString()));
 
+            System.out.println(ANSI_YELLOW + String.format("Agent with ID %d received REQUEST message from agent with ID %d", this.agent.getId(), sender_id) + ANSI_RESET);
+            System.out.println(ANSI_YELLOW + String.format("Sending: %b@%s from agent %d to agent %d", this.agent.getIsHaveInfoAboutAllAgents(), this.agent.getAgentsInfo().toString(), this.agent.getId(), sender_id) + ANSI_RESET);
+
+            this.agent.send(reply);
         }
 
+        // Parsing and applying information.
         if (msg.getPerformative() == ACLMessage.INFORM) {
 
-            System.out.println(String.format("Agent with ID %d received INFORM message from Agent with ID %d", this.agent.getId(), sender_id));
-            // Получили информирование ("bool@Dict")
+            System.out.println(ANSI_CYAN + String.format("Agent with ID %d received INFORM message from Agent with ID %d", this.agent.getId(), sender_id) + ANSI_RESET);
+
+            // Getting info in format ("bool@Dict").
             String[] msgContent = msg.getContent().split("@");
+            boolean isNeighbourHaveInfoAboutAllAgents = Boolean.parseBoolean(msgContent[0]);
+            Map<Integer,Integer> neighbourMap = getMapFromString(msgContent[1]);
 
-            // Словарь в стринге
-            String dict = msgContent[1];
-
-
-            boolean isMainFull = Boolean.parseBoolean(msgContent[0]);
-
-            // Изменяем в словаре состояний соседей состояние соседа, если его состояние true
-            if (isMainFull) {
+            // If our neighbour have information about all agents, we change it's state in our LinkedAgentsState dictionary.
+            if (isNeighbourHaveInfoAboutAllAgents) {
                 Map<Integer, Boolean> newLinkedAgentsState = this.agent.getLinkedAgentsState();
-
-                newLinkedAgentsState.put(sender_id, isMainFull);
+                newLinkedAgentsState.put(sender_id, true);
                 this.agent.setLinkedAgentsState(newLinkedAgentsState);
             }
 
-            System.out.println(this.agent.getLinkedAgentsState());
+            // If our agentInfo map equals to neighbours agentInfo map, that means
+            // that we collected information about all agents.
+            if (this.agent.getAgentsInfo().equals(neighbourMap)) {
+                this.agent.setIsHaveInfoAboutAllAgents(true);
+            } else {
 
-            dict = dict.substring(1, dict.length()-1);           //remove curly brackets
-            String[] keyValuePairs = dict.split(",");              //split the string to creat key-value pairs
-            Map<Integer,Integer> map = new HashMap<>();
+                // Merging received map with our's agent's map.
+                Map<Integer,Integer> mergedAgentsInfo;
+                mergedAgentsInfo = this.agent.getAgentsInfo();
+                neighbourMap.keySet().removeAll(mergedAgentsInfo.keySet());
+                mergedAgentsInfo.putAll(neighbourMap);
 
-            for(String pair : keyValuePairs)                        //iterate over the pairs
-            {
-                String[] entry = pair.split("=");                   //split the pairs to get key and value
-                map.put(Integer.parseInt(entry[0].trim()), Integer.parseInt(entry[1].trim()));          //add them to the hashmap and trim whitespaces
+                this.agent.setAgentsInfo(mergedAgentsInfo);
             }
 
-            // Ставим значение текущему агенту isMainFull true
-            if (isMainFull) {
-                this.agent.setMainFull(isMainFull);
+            // If our neighbour have information about all agents, that means that after merging
+            // information we will also have information about all agents.
+            if (isNeighbourHaveInfoAboutAllAgents) {
+                this.agent.setIsHaveInfoAboutAllAgents(true);
             }
-            // Если нечего мерджить и мы главный агент, то ставим себе isMainFull = true
-            if (this.agent.getDictionary().equals(map)) {
-
-                if (this.agent.isMain()) {
-
-                    this.agent.setMainFull(true);
-                }
-            }
-
-            // Merge received map with agent's map
-            Map<Integer,Integer> agentMap;
-            agentMap = this.agent.getDictionary();
-
-            map.keySet().removeAll(agentMap.keySet());
-            agentMap.putAll(map);
-
-
-
-            this.agent.setDictionary(agentMap);
-
         }
+    }
 
+    // Parsing string map into map.
+    private Map<Integer,Integer> getMapFromString(String str) {
+        str = str.substring(1, str.length()-1);                                              // Removing curly brackets.
+        String[] keyValuePairs = str.split(",");                                                // Splitting string to create key-value pairs.
 
-        //System.out.println(ANSI_GREEN + String.format("Agent %d received message: <%s> from agent %d.", this.agent.getId(), content, sender_id) + ANSI_RESET);
+        Map<Integer,Integer> map = new HashMap<>();
+        for(String pair : keyValuePairs) {
+            String[] entry = pair.split("=");                                                   // Splitting pairs to get key, value.
+            map.put(Integer.parseInt(entry[0].trim()), Integer.parseInt(entry[1].trim()));         // Adding them to the amp and trimming whitespaces.
+        }
+        return map;
     }
 
     public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
-
-
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
 }
