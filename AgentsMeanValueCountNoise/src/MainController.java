@@ -32,6 +32,5 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }

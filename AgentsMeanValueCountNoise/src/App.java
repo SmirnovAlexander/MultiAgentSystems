@@ -3,21 +3,22 @@ import java.util.Arrays;
 
 public class App {
 
-    public static ArrayList<ArrayList<Integer>> ADJ_MATRIX;
+    public static ArrayList<ArrayList<Float>> ADJ_MATRIX;
+
     public static int NUMBER_OF_AGENTS = 5;
-    public static int MAX_STEPS = 100;
+
+    public static float NOISE_MIN = -0.01f;
+    public static float NOISE_MAX = 0.01f;
 
     public static void main(String[] args) {
 
-        // ToDo: remove if on main (remove main agent)
-
         // Initializing connection matrix
         ADJ_MATRIX = new ArrayList<>();
-        ArrayList<Integer> row1 = new ArrayList<>(Arrays.asList(0,1,1,1,1));
-        ArrayList<Integer> row2 = new ArrayList<>(Arrays.asList(1,0,1,1,1));
-        ArrayList<Integer> row3 = new ArrayList<>(Arrays.asList(1,1,0,1,1));
-        ArrayList<Integer> row4 = new ArrayList<>(Arrays.asList(1,1,1,0,1));
-        ArrayList<Integer> row5 = new ArrayList<>(Arrays.asList(1,1,1,1,0));
+        ArrayList<Float> row1 = new ArrayList<>(Arrays.asList(0f, 1f, 1f, 1f, 1f));
+        ArrayList<Float> row2 = new ArrayList<>(Arrays.asList(1f, 0f, 1f, 1f, 1f));
+        ArrayList<Float> row3 = new ArrayList<>(Arrays.asList(1f, 1f, 0f, 1f, 1f));
+        ArrayList<Float> row4 = new ArrayList<>(Arrays.asList(1f, 1f, 1f, 0f, 1f));
+        ArrayList<Float> row5 = new ArrayList<>(Arrays.asList(1f, 1f, 1f, 1f, 0f));
         ADJ_MATRIX.add(row1);
         ADJ_MATRIX.add(row2);
         ADJ_MATRIX.add(row3);
@@ -28,6 +29,28 @@ public class App {
         mc.initAgents();
     }
 }
+
+
+//ADJ_MATRIX = new ArrayList<>();
+//ArrayList<Float> row1 = new ArrayList<>(Arrays.asList(0f, 0.8f, 0f));
+//ArrayList<Float> row2 = new ArrayList<>(Arrays.asList(1f, 0f, 1f));
+//ArrayList<Float> row3 = new ArrayList<>(Arrays.asList(0f, 0.7f, 0f));
+//ADJ_MATRIX.add(row1);
+//ADJ_MATRIX.add(row2);
+//ADJ_MATRIX.add(row3);
+
+//// Initializing connection matrix
+//        ADJ_MATRIX = new ArrayList<>();
+//        ArrayList<Integer> row1 = new ArrayList<>(Arrays.asList(0,1,1,1,1));
+//        ArrayList<Integer> row2 = new ArrayList<>(Arrays.asList(1,0,1,1,1));
+//        ArrayList<Integer> row3 = new ArrayList<>(Arrays.asList(1,1,0,1,1));
+//        ArrayList<Integer> row4 = new ArrayList<>(Arrays.asList(1,1,1,0,1));
+//        ArrayList<Integer> row5 = new ArrayList<>(Arrays.asList(1,1,1,1,0));
+//        ADJ_MATRIX.add(row1);
+//        ADJ_MATRIX.add(row2);
+//        ADJ_MATRIX.add(row3);
+//        ADJ_MATRIX.add(row4);
+//        ADJ_MATRIX.add(row5);
 
 
 

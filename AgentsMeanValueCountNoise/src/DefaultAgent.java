@@ -9,28 +9,21 @@ import java.util.concurrent.TimeUnit;
 public class DefaultAgent extends Agent {
 
     private int id;
-    private boolean isMain;                           // If this agent is main agent.
-    private ArrayList<Integer> linkedAgents;          // List with id's of linked agents.
-    private Map<Integer, Boolean> linkedAgentsState;  // List with states (isFull) of linked agents.
-    private int number;                               // Number that agent stores.
-    private boolean isHaveInfoAboutAllAgents;         // If agent has collected info about all other agents.
-    private Map<Integer,Integer> agentsInfo;          // Information about other agents id's and their numbers.
+    private HashMap<Integer, Float> linkedAgents;       // Storing connected agent's with probability of sending message.
+    private float number;                               // Number that agent stores.
 
     @Override
     protected void setup() {
 
         this.id = Integer.parseInt(getAID().getLocalName());
 
-        // Main agent will be agent with id = 1.
-        this.isMain = this.id == 1;
-
-        linkedAgents = new ArrayList<>();
-        linkedAgentsState = new HashMap<>();
-        ArrayList<Integer> row = App.ADJ_MATRIX.get(this.id - 1);
+        // Initializing connection HashMap.
+        linkedAgents = new HashMap<>();
+        ArrayList<Float> row = App.ADJ_MATRIX.get(this.id - 1);
         for (int i = 0; i < row.size(); i++){
-            if(row.get(i) == 1) {
-                linkedAgents.add(i + 1);
-                linkedAgentsState.put(i + 1, false);
+            float connection = row.get(i);
+            if(connection > 0.01f) {
+                linkedAgents.put(i + 1, connection);
             }
         }
 
@@ -38,13 +31,7 @@ public class DefaultAgent extends Agent {
         Random x = new Random();
         this.number =  x.nextInt(10);;
 
-        this.isHaveInfoAboutAllAgents = false;
-
-        // Putting information about itself in agentsInfo.
-        this.agentsInfo = new HashMap<>();
-        this.agentsInfo.put(this.id, this.number);
-
-        System.out.println(String.format("Agent %d have number %d and connected to agents %s", this.getId(), this.number, this.getLinkedAgents()));
+        System.out.println(String.format("Agent %d have number %f and connected to agents %s", this.getId(), this.number, this.getLinkedAgents()));
         System.out.println("----------------------------------------------------------------");
 
         // Adding behaviours.
@@ -56,35 +43,15 @@ public class DefaultAgent extends Agent {
         return id;
     }
 
-    public ArrayList<Integer> getLinkedAgents() {
+    public HashMap<Integer, Float> getLinkedAgents() {
         return linkedAgents;
     }
 
-    public boolean getIsMain() {
-        return isMain;
+    public float getNumber() {
+        return number;
     }
 
-    public Boolean getIsHaveInfoAboutAllAgents() {
-        return isHaveInfoAboutAllAgents;
-    }
-
-    public void setIsHaveInfoAboutAllAgents(Boolean haveInfoAboutAllAgents) {
-        isHaveInfoAboutAllAgents = haveInfoAboutAllAgents;
-    }
-
-    public Map<Integer, Integer> getAgentsInfo() {
-        return agentsInfo;
-    }
-
-    public void setAgentsInfo(Map<Integer, Integer> agentsInfo) {
-        this.agentsInfo = agentsInfo;
-    }
-
-    public Map<Integer, Boolean> getLinkedAgentsState() {
-        return linkedAgentsState;
-    }
-
-    public void setLinkedAgentsState(Map<Integer, Boolean> linkedAgentsState) {
-        this.linkedAgentsState = linkedAgentsState;
+    public void setNumber(float number) {
+        this.number = number;
     }
 }
