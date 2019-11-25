@@ -6,6 +6,7 @@ public class App {
     public static ArrayList<ArrayList<Float>> ADJ_MATRIX;
 
     public static int NUMBER_OF_AGENTS = 5;
+    public static int MAX_STEPS = 50;
 
     public static float NOISE_MIN = -0.01f;
     public static float NOISE_MAX = 0.01f;
