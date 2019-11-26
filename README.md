@@ -36,4 +36,4 @@ Below are listed all tasks with links and descriptions.
    
  - [2.2]()
  
-   You're given 10 agents. Each agent randomly connected to other agents. Each agent proposes a number. Agents are able to communicate only with neighbours. Agents may send data with mistakes and they may lose connection to neighbour temporary. You should use gradient descent. Program should count a mean value.
+   You're given 10 agents. Each agent randomly connected to other agents. Each agent proposes a number. Agents are able to communicate only with neighbours. Agents may send data with mistakes and they may lose connection to neighbour temporary. Also there should be a random delay (information reaches target on the next tick). You should use gradient descent. Program should count a mean value.
