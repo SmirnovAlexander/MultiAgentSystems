@@ -15,9 +15,9 @@ public class App {
 
         // Initializing connection matrix
         ADJ_MATRIX = new ArrayList<>();
-        ArrayList<Float> row1 = new ArrayList<>(Arrays.asList(0f, 1f, 1f, 1f, 1f));
-        ArrayList<Float> row2 = new ArrayList<>(Arrays.asList(1f, 0f, 1f, 1f, 1f));
-        ArrayList<Float> row3 = new ArrayList<>(Arrays.asList(1f, 1f, 0f, 1f, 1f));
+        ArrayList<Float> row1 = new ArrayList<>(Arrays.asList(0f, 0.8f, 0.7f, 1f, 1f));
+        ArrayList<Float> row2 = new ArrayList<>(Arrays.asList(0.8f, 0f, 1f, 1f, 1f));
+        ArrayList<Float> row3 = new ArrayList<>(Arrays.asList(1f, 0.7f, 0f, 1f, 1f));
         ArrayList<Float> row4 = new ArrayList<>(Arrays.asList(1f, 1f, 1f, 0f, 1f));
         ArrayList<Float> row5 = new ArrayList<>(Arrays.asList(1f, 1f, 1f, 1f, 0f));
         ADJ_MATRIX.add(row1);

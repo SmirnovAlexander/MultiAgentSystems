@@ -10,11 +10,20 @@ public class FindAverage extends TickerBehaviour {
     private final DefaultAgent agent;
     private int currentStep;
 
+    private int delayStep;
+    private String delayContent;
+    private int delayReceiverId;
+
     FindAverage(DefaultAgent agent, long period) {
         super(agent, period);
         this.setFixedPeriod(true);
+
         this.agent = agent;
         this.currentStep = 0;
+
+        this.delayStep = -2;
+        this.delayContent = "";
+        this.delayReceiverId = 0;
     }
 
     @Override
@@ -31,9 +40,20 @@ public class FindAverage extends TickerBehaviour {
 
                     String content = Float.toString(this.agent.getNumber());
 
-                    // Sending message to agent with given probability.
+                    // If we lose connection we remembering all the information
+                    // about message and sending it on next iteration.
                     if (new Random().nextDouble() <= this.agent.getLinkedAgents().get(receiver_id)) {
                         this.send_msg(receiver_id, content);
+                    } else {
+                        this.delayStep = currentStep;
+                        this.delayContent = content;
+                        this.delayReceiverId = receiver_id;
+                    }
+
+                    // If on previous iteration was undelivered message
+                    // we send it on this iteration.
+                    if (currentStep == delayStep + 1) {
+                        this.send_msg(this.delayReceiverId, this.delayContent);
                     }
                 }
             }
